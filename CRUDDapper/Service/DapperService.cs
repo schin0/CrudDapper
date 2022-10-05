@@ -21,8 +21,7 @@ namespace CRUDDapper.Service
             _conexao = conexao;
         }
 
-        public DbConnection GetConnection()
-            => new SqlConnection(_conexao);
+        public DbConnection GetConnection() => new SqlConnection(_conexao);
 
         public T Buscar<T>(string procedure, DynamicParameters parametros, CommandType tipoComando = CommandType.StoredProcedure)
         {
