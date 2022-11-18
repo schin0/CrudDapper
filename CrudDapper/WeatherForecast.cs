@@ -1,6 +1,6 @@
 using System;
 
-namespace CRUDDapper.Data
+namespace CrudDapper
 {
     public class WeatherForecast
     {
