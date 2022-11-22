@@ -1,7 +1,5 @@
 ﻿using Domain.Enums;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Models.Veiculo
 {
@@ -13,6 +11,6 @@ namespace Domain.Models.Veiculo
         public string Placa { get; set; }
         public CorEnum Cor { get; set; }
         public int Km { get; set; }
-        public Modelo Modelo { get; set; }
+        public VeiculoModelo Modelo { get; set; }
     }
 }
