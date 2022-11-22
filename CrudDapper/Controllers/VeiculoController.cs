@@ -1,10 +1,12 @@
 ﻿using Domain.Models.Veiculo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System;
 
 namespace CrudDapper.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     public class VeiculoController : Controller
     {
@@ -35,5 +37,6 @@ namespace CrudDapper.Controllers
         {
             return (_veiculoService.GetById(id, tenantId));
         }
+
     }
 }

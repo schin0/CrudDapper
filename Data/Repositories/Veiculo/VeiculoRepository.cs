@@ -2,17 +2,23 @@
 using Domain.Models.Veiculo;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Data;
 
 namespace Data.Repositories
 {
-    public class VeiculoRepository : RepositoryBase, IVeiculoRepository
+    //public class VeiculoRepository : RepositoryBase, IVeiculoRepository
+    public class VeiculoRepository : IVeiculoRepository
     {
-        public VeiculoRepository(IDbConnection connection, IConfiguration configuration) : base(connection, configuration)
+
+        public VeiculoRepository(IConfiguration configuracao)
         {
         }
 
-        public bool Delete(int id, Guid tenantId)
+        public int Delete(int id, Guid tenantId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Edit(Veiculo model)
         {
             throw new NotImplementedException();
         }
@@ -22,12 +28,7 @@ namespace Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Veiculo Insert(Veiculo model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Update(Veiculo model)
+        public int Insert(Veiculo model)
         {
             throw new NotImplementedException();
         }
