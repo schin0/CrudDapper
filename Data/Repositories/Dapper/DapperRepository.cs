@@ -21,30 +21,46 @@ namespace Data.Repositories.Dapper
 
         public bool Delete(int id, Guid tenantId)
         {
-            throw new NotImplementedException();
+            return _connection.Execute("DELETE FROM [treinamentoVeiculo].[Veiculo] WHERE Id = @Id AND TenantId = @TenantId", new
+            {
+                id,
+                tenantId
+            }) > 0;
         }
 
         public Veiculo GetById(int id, Guid tenantId)
         {
-            throw new NotImplementedException();
+            return _connection.QuerySingleOrDefault<Veiculo>("SELECT * FROM [treinamentoVeiculo].[Veiculo] WHERE Id = @Id AND TenantId = @TenantId", new
+            {
+                id,
+                tenantId
+            });
         }
 
         public Veiculo Insert(Veiculo model)
         {
-            throw new NotImplementedException();
+            string sql = "INSERT INTO [treinamentoVeiculo].[Veiculo]([TenantId], [DataCadastro], [Placa], [Cor], [Km], [ModeloId]) " +
+                                       "VALUES (@TenantId, @DataCadastro, @Placa, @Cor, @Km, @ModeloId); SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            model.Id = _connection.Query<int>(sql, model).Single();
+
+            return model;
         }
 
         public List<Veiculo> List(FiltroVeiculo filtro)
         {
-            return _connection.Query<Veiculo>("SELECT * FROM treinamentoVeiculo.Veiculo WHERE TenantId = @TenantId", new
-                { 
-                    filtro.TenantId
-                }).ToList();
+            return _connection.Query<Veiculo>("SELECT * FROM [treinamentoVeiculo].[Veiculo] WHERE TenantId = @TenantId", new
+            {
+                filtro.TenantId
+            }).ToList();
         }
 
         public bool Update(Veiculo model)
         {
-            throw new NotImplementedException();
+            string sql = "UPDATE [treinamentoVeiculo].[Veiculo] " +
+                "SET DataCadastro = @DataCadastro, Placa = @Placa, Cor = @Cor, Km = @Km, ModeloId = @ModeloId WHERE Id = @Id AND TenantId = @TenantId";
+
+            return _connection.Execute(sql, model) > 0;
         }
     }
 }
