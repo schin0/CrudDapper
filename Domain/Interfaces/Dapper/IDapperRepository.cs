@@ -12,4 +12,13 @@ namespace Domain.Interfaces.Dapper
         bool Update(Models.Veiculo.Veiculo model);
         bool Delete(int id, Guid tenantId);
     }
+    
+    public interface IDapperRepository<T, TFiltro>
+    {
+        List<T> List(TFiltro filter);
+        T GetById(int id, Guid tenantId);
+        T Insert(T model);
+        bool Update(T model);
+        bool Delete(int id, Guid tenantId);
+    }
 }
