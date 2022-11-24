@@ -1,41 +1,50 @@
-﻿using Domain.Models.Veiculo;
-using Microsoft.AspNetCore.Authorization;
+﻿using Domain.Filters.Veiculo;
+using Domain.Models.Veiculo;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System;
 
 namespace CrudDapper.Controllers
 {
-    [AllowAnonymous]
     [Route("api/[controller]")]
     public class VeiculoController : Controller
     {
         // TODO: Inserir um validator para regras de negócio
         private readonly IVeiculoService _veiculoService;
 
-        // TODO: Retornar IActionResult em todos endpoints
-        [HttpPost]
-        public Veiculo Post([FromBody] Veiculo model)
+        public VeiculoController(IVeiculoService veiculoService)
         {
-            return (_veiculoService.Insert(model));
+            _veiculoService = veiculoService;
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Veiculo model)
+        {
+            return Ok(_veiculoService.Insert(model));
         }
 
         [HttpPut]
-        public bool Put([FromBody] Veiculo model)
+        public IActionResult Put([FromBody] Veiculo model)
         {
-            return (_veiculoService.Update(model));
+            return Ok(_veiculoService.Update(model));
         }
 
         [HttpDelete("{id},{tenantId}")]
-        public bool Delete(int id, Guid tenantId)
+        public IActionResult Delete(int id, Guid tenantId)
         {
-            return (_veiculoService.Delete(id, tenantId));
+            return Ok(_veiculoService.Delete(id, tenantId));
         }
 
         [HttpGet("{id},{tenantId}")]
-        public Veiculo Get(int id, Guid tenantId)
+        public IActionResult Get(int id, Guid tenantId)
         {
-            return (_veiculoService.GetById(id, tenantId));
+            return Ok(_veiculoService.GetById(id, tenantId));
+        }
+        
+        [HttpGet]
+        public IActionResult List(FiltroVeiculo filtro)
+        {
+            return Ok(_veiculoService.List(filtro));
         }
 
     }

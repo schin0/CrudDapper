@@ -1,5 +1,4 @@
 ﻿using Domain.Filters.Veiculo;
-using Domain.Interfaces.Dapper;
 using Domain.Interfaces.Veiculo;
 using Services.Interfaces;
 using System;
@@ -10,27 +9,25 @@ namespace Services.Veiculo
     public class VeiculoService : IVeiculoService
     {
         private readonly IVeiculoRepository _veiculoRepository;
-        private readonly IDapperRepository _dapper;
 
-        public VeiculoService(IVeiculoRepository veiculoRepository, IDapperRepository dapper)
+        public VeiculoService(IVeiculoRepository veiculoRepository)
         {
             _veiculoRepository = veiculoRepository;
-            _dapper = dapper;
         }
 
         public bool Delete(int id, Guid tenantId)
         {
-            throw new NotImplementedException();
+            return _veiculoRepository.Delete(id, tenantId);
         }
 
         public Domain.Models.Veiculo.Veiculo GetById(int id, Guid tenantId)
         {
-            throw new NotImplementedException();
+            return _veiculoRepository.GetById(id, tenantId);
         }
 
         public Domain.Models.Veiculo.Veiculo Insert(Domain.Models.Veiculo.Veiculo model)
         {
-            throw new NotImplementedException();
+            return _veiculoRepository.Insert(model);
         }
 
         public List<Domain.Models.Veiculo.Veiculo> List(FiltroVeiculo filtro)
@@ -40,7 +37,7 @@ namespace Services.Veiculo
 
         public bool Update(Domain.Models.Veiculo.Veiculo model)
         {
-            throw new NotImplementedException();
+            return _veiculoRepository.Update(model);
         }
     }
 }

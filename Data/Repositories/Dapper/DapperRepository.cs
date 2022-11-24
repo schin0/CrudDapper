@@ -5,47 +5,41 @@ using Domain.Models.Veiculo;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Data.Repositories.Dapper
 {
-    public class DapperRepository : IDapperRepository
+    public class DapperRepository : IDapperRepository { }
+
+    public class DapperRepository<T>: IDapperRepository
     {
-        private IDbConnection _connection;
+        protected readonly IDbConnection _connection;
 
-        public DapperRepository()
+        public DapperRepository(IDbConnection connection)
         {
-            _connection = new SqlConnection(@"oi");
+            _connection = connection;
         }
 
-        public bool Delete(int id, Guid tenantId)
+        public bool Delete(string command, int id, Guid tenantId)
         {
-            return _connection.Execute("DELETE FROM [treinamentoVeiculo].[Veiculo] WHERE Id = @Id AND TenantId = @TenantId", new
+            return _connection.Execute(command, new
             {
                 id,
                 tenantId
-            }) > 0;
+            }, commandType: CommandType.Text) > 0;
         }
 
-        public Veiculo GetById(int id, Guid tenantId)
+        public Veiculo GetById(string query, int id, Guid tenantId)
         {
-            return _connection.QuerySingleOrDefault<Veiculo>("SELECT * FROM [treinamentoVeiculo].[Veiculo] WHERE Id = @Id AND TenantId = @TenantId", new
+            return _connection.QueryFirst<Veiculo>(query, new
             {
                 id,
                 tenantId
-            });
+            }, commandType: CommandType.Text);
         }
 
-        public Veiculo Insert(Veiculo model)
-        {
-            string sql = "INSERT INTO [treinamentoVeiculo].[Veiculo]([TenantId], [DataCadastro], [Placa], [Cor], [Km], [ModeloId]) " +
-                                       "VALUES (@TenantId, @DataCadastro, @Placa, @Cor, @Km, @ModeloId); SELECT CAST(SCOPE_IDENTITY() AS INT);";
-
-            model.Id = _connection.Query<int>(sql, model).Single();
-
-            return model;
-        }
+        public T Insert(string command, T model)
+            => _connection.QuerySingle<T>(command, model, commandType: CommandType.Text);
 
         public List<Veiculo> List(FiltroVeiculo filtro)
         {
@@ -55,12 +49,8 @@ namespace Data.Repositories.Dapper
             }).ToList();
         }
 
-        public bool Update(Veiculo model)
-        {
-            string sql = "UPDATE [treinamentoVeiculo].[Veiculo] " +
-                "SET DataCadastro = @DataCadastro, Placa = @Placa, Cor = @Cor, Km = @Km, ModeloId = @ModeloId WHERE Id = @Id AND TenantId = @TenantId";
-
-            return _connection.Execute(sql, model) > 0;
-        }
+        public int Update(string command, T model)
+            => _connection.Execute(command, model, commandType: CommandType.Text);
+        
     }
 }
