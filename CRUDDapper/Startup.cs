@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace CrudDapper
 {
@@ -20,8 +22,16 @@ namespace CrudDapper
             services.AddControllers();
 
             services.AddSingleton<IConfiguration>(Configuration);
+
+            services.AddHttpContextAccessor();
+
+            // TODO: Verificar pq nao está funcionando
+            //CrossCutting.Bootstraper.RegisterIDbConnection(services, Configuration);
+
+            string stringConexao = Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+            services.AddScoped(typeof(IDbConnection), c => new SqlConnection(stringConexao));
+
             CrossCutting.Bootstraper.RegisterServices(services, Configuration);
-            //services.AddScoped<IVeiculoService, VeiculoService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

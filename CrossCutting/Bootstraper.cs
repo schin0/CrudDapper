@@ -8,6 +8,7 @@ using Services.Interfaces;
 using Services.Veiculo;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace CrossCutting
 {
@@ -17,6 +18,13 @@ namespace CrossCutting
         {
             services.RegisterTypes(GetRepositories());
             services.RegisterTypes(GetServices());
+        }
+
+        public static void RegisterIDbConnection(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton(
+                    new SqlConnection(configuration.GetSection("ConnectionStrings:DefaultConnection").Value)
+                );
         }
 
         private static void RegisterTypes(this IServiceCollection container, Dictionary<Type, Type> types)
