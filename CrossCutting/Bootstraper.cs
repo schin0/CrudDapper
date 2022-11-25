@@ -1,6 +1,5 @@
 ﻿using Data.Repositories;
-using Data.Repositories.Dapper;
-using Domain.Interfaces.Dapper;
+using Domain.Interfaces;
 using Domain.Interfaces.Veiculo;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +7,7 @@ using Services.Interfaces;
 using Services.Veiculo;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace CrossCutting
@@ -20,10 +20,10 @@ namespace CrossCutting
             services.RegisterTypes(GetServices());
         }
 
-        public static void RegisterIDbConnection(IServiceCollection services, IConfiguration configuration)
+        public static void RegisterIDbConnection(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton(
-                    new SqlConnection(configuration.GetSection("ConnectionStrings:DefaultConnection").Value)
+            services.AddScoped(
+                    typeof(IDbConnection), c => new SqlConnection(configuration.GetSection("ConnectionStrings:DefaultConnection").Value)
                 );
         }
 
@@ -36,7 +36,7 @@ namespace CrossCutting
         private static Dictionary<Type, Type> GetRepositories()
             => new Dictionary<Type, Type>
             {
-                { typeof(IDapperRepository), typeof(DapperRepository) },
+                { typeof(IRepositoryBase), typeof(RepositoryBase) },
                 { typeof(IVeiculoRepository), typeof(VeiculoRepository) }
             };
 

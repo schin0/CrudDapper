@@ -21,15 +21,11 @@ namespace CrudDapper
         {
             services.AddControllers();
 
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton(Configuration);
 
             services.AddHttpContextAccessor();
 
-            // TODO: Verificar pq nao está funcionando
-            //CrossCutting.Bootstraper.RegisterIDbConnection(services, Configuration);
-
-            string stringConexao = Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
-            services.AddScoped(typeof(IDbConnection), c => new SqlConnection(stringConexao));
+            CrossCutting.Bootstraper.RegisterIDbConnection(services, Configuration);
 
             CrossCutting.Bootstraper.RegisterServices(services, Configuration);
         }
