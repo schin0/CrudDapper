@@ -1,14 +1,14 @@
-﻿using Data.Repositories.Dapper;
-using Domain.Interfaces.Veiculo;
+﻿using Domain.Interfaces.Veiculo;
 using Domain.Models.Veiculo;
 using System;
 using System.Data;
 
 namespace Data.Repositories
 {
-    public class VeiculoRepository : DapperRepository<Veiculo>, IVeiculoRepository
+    public class VeiculoRepository : RepositoryBase<Veiculo>, IVeiculoRepository
     {
-        private readonly string tabela = "[treinamentoVeiculo].[Veiculo]";
+        // TODO: Verificar para colocar SQL Kata para montar as queries
+        private const string TABELA = "[treinamentoVeiculo].[Veiculo]";
 
         public VeiculoRepository(IDbConnection connection) : base(connection)
         {
@@ -16,7 +16,7 @@ namespace Data.Repositories
 
         public bool Delete(int id, Guid tenantId)
         {
-            var command = $"DELETE FROM {tabela} WHERE Id = @Id AND TenantId = @TenantId";
+            var command = $"DELETE FROM {TABELA} WHERE Id = @Id AND TenantId = @TenantId";
 
             return Delete(command, id, tenantId);
         }
@@ -24,14 +24,14 @@ namespace Data.Repositories
 
         public Veiculo GetById(int id, Guid tenantId)
         {
-            var query = $"SELECT * FROM {tabela} WHERE Id = @Id AND TenantId = @TenantId";
+            var query = $"SELECT * FROM {TABELA} WHERE Id = @Id AND TenantId = @TenantId";
 
             return GetById(query, id, tenantId);
         }
 
         public Veiculo Insert(Veiculo model)
         {
-            string command = $"INSERT INTO {tabela}([TenantId], [DataCadastro], [Placa], [Cor], [Km], [ModeloId]) " +
+            string command = $"INSERT INTO {TABELA}([TenantId], [DataCadastro], [Placa], [Cor], [Km], [ModeloId]) " +
                                        "VALUES (@TenantId, @DataCadastro, @Placa, @Cor, @Km, @ModeloId); SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             return Insert(command, model);
@@ -39,10 +39,10 @@ namespace Data.Repositories
 
         public bool Update(Veiculo model)
         {
-            string command = $"UPDATE {tabela}" +
+            string command = $"UPDATE {TABELA}" +
                 "SET DataCadastro = @DataCadastro, Placa = @Placa, Cor = @Cor, Km = @Km, ModeloId = @ModeloId WHERE Id = @Id AND TenantId = @TenantId";
 
-            return Update(command, model) > 0;
+            return Update(command, model);
         }
 
         //public List<Veiculo> List(FiltroVeiculo filtro)
