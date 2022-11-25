@@ -9,7 +9,9 @@ namespace CrudDapper.Controllers
     [Route("api/[controller]")]
     public class VeiculoController : Controller
     {
-        // TODO: Inserir um validator para regras de negócio
+        // TODO: ver exemplo na notificação para model ser request e nao ir direto pro repository igual vem na controller
+        // TODO: estudar automapper
+        // TODO: colocar testes unitários no projeto
         private readonly IVeiculoService _veiculoService;
 
         public VeiculoController(IVeiculoService veiculoService)
