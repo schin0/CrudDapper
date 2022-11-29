@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Filters.Veiculo;
+using System;
+using System.Collections.Generic;
 
 namespace Services.Interfaces
 {
@@ -12,7 +14,9 @@ namespace Services.Interfaces
         T Insert(T model);
     }
 
-    // TODO: Inserir listar com filtro 
-    //public interface IService<T, TFilter> { }
+    public interface IService<T, TFilter> : IService<T> where TFilter : BasicFilter
+    {
+        List<T> List(TFilter filter);
+    }
 
 }

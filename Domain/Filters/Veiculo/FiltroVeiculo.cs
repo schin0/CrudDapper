@@ -1,6 +1,6 @@
 ﻿namespace Domain.Filters.Veiculo
 {
-    public class FiltroVeiculo : FiltroBasico
+    public class FiltroVeiculo : BasicFilter
     {
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Filters.Veiculo;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Interfaces
@@ -15,11 +16,9 @@ namespace Domain.Interfaces
         bool Delete(int id, Guid tenantId);
     }
 
-    public interface IRepositoryBase<T, TFiltro> : IRepositoryBase<T>
+    public interface IRepositoryBase<T, TFilter> : IRepositoryBase<T> where TFilter : BasicFilter
     {
-        List<T> List(TFiltro filter);
+        List<T> List(TFilter filter);
     }
 
-    // TODO: Inserir listar com filtro 
-    //public interface IRepositoryBase<T, TFilter> { }
 }
