@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Domain.Interfaces.Veiculo
+﻿namespace Domain.Interfaces.Veiculo
 {
-    public interface IVeiculoRepository : IRepositoryBase<Models.Veiculo.Veiculo>
+    public interface IVeiculoRepository : IRepositoryBase<Models.Veiculo.Veiculo, Filters.Veiculo.FiltroVeiculo>
     {
-        List<Models.Veiculo.Veiculo> List(Filters.Veiculo.FiltroVeiculo filtro);
     }
 }
