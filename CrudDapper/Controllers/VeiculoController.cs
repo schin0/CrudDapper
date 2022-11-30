@@ -1,6 +1,5 @@
 ﻿using Domain.Arguments;
 using Domain.Filters.Veiculo;
-using Domain.Models.Veiculo;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System;
@@ -10,8 +9,6 @@ namespace CrudDapper.Controllers
     [Route("api/[controller]")]
     public class VeiculoController : Controller
     {
-        // TODO: estudar automapper
-        // TODO: colocar testes unitários no projeto
         private readonly IVeiculoService _veiculoService;
 
         public VeiculoController(IVeiculoService veiculoService)
@@ -42,7 +39,7 @@ namespace CrudDapper.Controllers
         {
             return Ok(_veiculoService.GetById(id, tenantId));
         }
-        
+
         [HttpGet]
         public IActionResult List(FiltroVeiculo filtro)
         {
