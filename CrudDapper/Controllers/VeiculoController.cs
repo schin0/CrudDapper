@@ -1,4 +1,5 @@
-﻿using Domain.Filters.Veiculo;
+﻿using Domain.Arguments;
+using Domain.Filters.Veiculo;
 using Domain.Models.Veiculo;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -9,7 +10,6 @@ namespace CrudDapper.Controllers
     [Route("api/[controller]")]
     public class VeiculoController : Controller
     {
-        // TODO: ver exemplo na notificação para model ser request e nao ir direto pro repository igual vem na controller
         // TODO: estudar automapper
         // TODO: colocar testes unitários no projeto
         private readonly IVeiculoService _veiculoService;
@@ -20,15 +20,15 @@ namespace CrudDapper.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Veiculo model)
+        public IActionResult Post([FromBody] VeiculoRequest model)
         {
-            return Ok(_veiculoService.Insert(model));
+            return Ok(_veiculoService.Insert(model.ToDomain()));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Veiculo model)
+        public IActionResult Put([FromBody] VeiculoRequest model)
         {
-            return Ok(_veiculoService.Update(model));
+            return Ok(_veiculoService.Update(model.ToDomain()));
         }
 
         [HttpDelete("{id},{tenantId}")]
