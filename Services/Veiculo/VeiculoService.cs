@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Services.Veiculo
 {
-    public class VeiculoService : IVeiculoService
+    public class VeiculoService : ServiceBase, IVeiculoService
     {
         private readonly IVeiculoRepository _veiculoRepository;
 
@@ -16,28 +16,18 @@ namespace Services.Veiculo
         }
 
         public bool Delete(int id, Guid tenantId)
-        {
-            return _veiculoRepository.Delete(id, tenantId);
-        }
+            => _veiculoRepository.Delete(id, tenantId);
 
         public Domain.Models.Veiculo.Veiculo GetById(int id, Guid tenantId)
-        {
-            return _veiculoRepository.GetById(id, tenantId);
-        }
+            => _veiculoRepository.GetById(id, tenantId);
 
         public Domain.Models.Veiculo.Veiculo Insert(Domain.Models.Veiculo.Veiculo model)
-        {
-            return _veiculoRepository.Insert(model);
-        }
+            => _veiculoRepository.Insert(model);
 
         public List<Domain.Models.Veiculo.Veiculo> List(FiltroVeiculo filtro)
-        {
-            throw new NotImplementedException();
-        }
+            => _veiculoRepository.List(filtro);
 
         public bool Update(Domain.Models.Veiculo.Veiculo model)
-        {
-            return _veiculoRepository.Update(model);
-        }
+            => _veiculoRepository.Update(model);
     }
 }

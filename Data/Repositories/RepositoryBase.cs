@@ -1,21 +1,21 @@
 ﻿using Dapper;
 using Domain.Filters.Veiculo;
-using Domain.Interfaces.Dapper;
+using Domain.Interfaces;
 using Domain.Models.Veiculo;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Data.Repositories.Dapper
+namespace Data.Repositories
 {
-    public class DapperRepository : IDapperRepository { }
+    public class RepositoryBase : IRepositoryBase { }
 
-    public class DapperRepository<T>: IDapperRepository
+    public class RepositoryBase<T> : IRepositoryBase
     {
         protected readonly IDbConnection _connection;
 
-        public DapperRepository(IDbConnection connection)
+        public RepositoryBase(IDbConnection connection)
         {
             _connection = connection;
         }
@@ -41,16 +41,23 @@ namespace Data.Repositories.Dapper
         public T Insert(string command, T model)
             => _connection.QuerySingle<T>(command, model, commandType: CommandType.Text);
 
-        public List<Veiculo> List(FiltroVeiculo filtro)
+        public bool Update(string command, T model)
+            => _connection.Execute(command, model, commandType: CommandType.Text) > 0;
+
+    }
+
+    public class RepositoryBase<T, TFilter> : RepositoryBase<T>
+    {
+        public RepositoryBase(IDbConnection connection): base(connection)
         {
-            return _connection.Query<Veiculo>("SELECT * FROM [treinamentoVeiculo].[Veiculo] WHERE TenantId = @TenantId", new
+        }
+
+        public List<Veiculo> List(string query, FiltroVeiculo filtro)
+        {
+            return _connection.Query<Veiculo>(query, new
             {
                 filtro.TenantId
             }).ToList();
         }
-
-        public int Update(string command, T model)
-            => _connection.Execute(command, model, commandType: CommandType.Text);
-        
     }
 }

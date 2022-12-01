@@ -1,54 +1,29 @@
-﻿using Data.Repositories.Dapper;
+﻿using Data.Queries;
+using Domain.Filters.Veiculo;
 using Domain.Interfaces.Veiculo;
 using Domain.Models.Veiculo;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Data.Repositories
 {
-    public class VeiculoRepository : DapperRepository<Veiculo>, IVeiculoRepository
+    public class VeiculoRepository : RepositoryBase<Veiculo, FiltroVeiculo>, IVeiculoRepository
     {
-        private readonly string tabela = "[treinamentoVeiculo].[Veiculo]";
-
         public VeiculoRepository(IDbConnection connection) : base(connection)
         {
         }
 
-        public bool Delete(int id, Guid tenantId)
-        {
-            var command = $"DELETE FROM {tabela} WHERE Id = @Id AND TenantId = @TenantId";
+        public bool Delete(int id, Guid tenantId) => Delete(VeiculoQuery.Delete(), id, tenantId);
 
-            return Delete(command, id, tenantId);
-        }
+        public Veiculo GetById(int id, Guid tenantId) => GetById(VeiculoQuery.GetById(), id, tenantId);
+
+        public Veiculo Insert(Veiculo model) => Insert(VeiculoQuery.Insert(), model);
 
 
-        public Veiculo GetById(int id, Guid tenantId)
-        {
-            var query = $"SELECT * FROM {tabela} WHERE Id = @Id AND TenantId = @TenantId";
+        public bool Update(Veiculo model) => Update(VeiculoQuery.Update(), model);
 
-            return GetById(query, id, tenantId);
-        }
-
-        public Veiculo Insert(Veiculo model)
-        {
-            string command = $"INSERT INTO {tabela}([TenantId], [DataCadastro], [Placa], [Cor], [Km], [ModeloId]) " +
-                                       "VALUES (@TenantId, @DataCadastro, @Placa, @Cor, @Km, @ModeloId); SELECT CAST(SCOPE_IDENTITY() AS INT);";
-
-            return Insert(command, model);
-        }
-
-        public bool Update(Veiculo model)
-        {
-            string command = $"UPDATE {tabela}" +
-                "SET DataCadastro = @DataCadastro, Placa = @Placa, Cor = @Cor, Km = @Km, ModeloId = @ModeloId WHERE Id = @Id AND TenantId = @TenantId";
-
-            return Update(command, model) > 0;
-        }
-
-        //public List<Veiculo> List(FiltroVeiculo filtro)
-        //{
-        //    return List(command, filtro);
-        //}
+        public List<Veiculo> List(FiltroVeiculo filter) => List(VeiculoQuery.List(), filter);
 
     }
 }

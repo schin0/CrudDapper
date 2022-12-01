@@ -1,5 +1,5 @@
-﻿using Domain.Filters.Veiculo;
-using Domain.Models.Veiculo;
+﻿using Domain.Arguments;
+using Domain.Filters.Veiculo;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System;
@@ -9,7 +9,6 @@ namespace CrudDapper.Controllers
     [Route("api/[controller]")]
     public class VeiculoController : Controller
     {
-        // TODO: Inserir um validator para regras de negócio
         private readonly IVeiculoService _veiculoService;
 
         public VeiculoController(IVeiculoService veiculoService)
@@ -18,15 +17,15 @@ namespace CrudDapper.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Veiculo model)
+        public IActionResult Post([FromBody] VeiculoRequest model)
         {
-            return Ok(_veiculoService.Insert(model));
+            return Ok(_veiculoService.Insert(model.ToDomain()));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Veiculo model)
+        public IActionResult Put([FromBody] VeiculoRequest model)
         {
-            return Ok(_veiculoService.Update(model));
+            return Ok(_veiculoService.Update(model.ToDomain()));
         }
 
         [HttpDelete("{id},{tenantId}")]
@@ -40,7 +39,7 @@ namespace CrudDapper.Controllers
         {
             return Ok(_veiculoService.GetById(id, tenantId));
         }
-        
+
         [HttpGet]
         public IActionResult List(FiltroVeiculo filtro)
         {
