@@ -31,5 +31,8 @@ namespace Handler
         // TODO: No inserir/Atualizar da API, mandar para a fila, para o handler processar
         // TODO: Estudar ExchangeTypes de fila
         // TODO: Estudar o porquê criar retry/dead
+        // https://www.rabbitmq.com/getstarted.html
+        // https://hub.docker.com/_/rabbitmq
+        // https://docs.docker.com/desktop/install/windows-install/
     }
 }
