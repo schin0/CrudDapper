@@ -3,12 +3,15 @@ using Domain.Interfaces;
 using Domain.Interfaces.Veiculo;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using Services.Interfaces;
 using Services.Veiculo;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace CrossCutting
 {
@@ -25,6 +28,45 @@ namespace CrossCutting
             services.AddScoped(
                     typeof(IDbConnection), c => new SqlConnection(configuration.GetSection("ConnectionStrings:DefaultConnection").Value)
                 );
+        }
+
+        public static void RegisterRabbitMQ(IConfiguration configuration)
+        {
+            var factory = CreateConnectionFactory(configuration);
+
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+
+            channel.QueueDeclare(queue: "hello",
+                                 durable: false,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: null);
+
+            var consumer = new EventingBasicConsumer(channel);
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+            };
+            
+            channel.QueueDeclarePassive("hello");
+
+            channel.BasicConsume(queue: "hello",
+                                 autoAck: true,
+                                 consumer: consumer);
+
+        }
+
+        private static ConnectionFactory CreateConnectionFactory(IConfiguration configuration)
+        {
+            return new ConnectionFactory()
+            {
+                HostName = configuration.GetSection("RabbitMQConfiguration:HostName").Value,
+                Password = configuration.GetSection("RabbitMQConfiguration:Password").Value,
+                UserName = configuration.GetSection("RabbitMQConfiguration:UserName").Value
+            };
         }
 
         private static void RegisterTypes(this IServiceCollection container, Dictionary<Type, Type> types)
