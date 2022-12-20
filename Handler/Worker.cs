@@ -1,6 +1,9 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,10 +20,38 @@ namespace Handler
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            ConnectRabbit();
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000, stoppingToken);
+            }
+        }
+
+        private void ConnectRabbit()
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost", Password = "schin123", UserName = "schin" };
+
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue: "hello",
+                                     durable: false,
+                                     exclusive: false,
+                                     autoDelete: false,
+                                     arguments: null);
+
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                };
+                channel.BasicConsume(queue: "hello",
+                                     autoAck: true,
+                                     consumer: consumer);
+
             }
         }
 
