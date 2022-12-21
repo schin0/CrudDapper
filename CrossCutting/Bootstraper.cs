@@ -43,20 +43,11 @@ namespace CrossCutting
                                  autoDelete: false,
                                  arguments: null);
 
-            var consumer = new EventingBasicConsumer(channel);
+            var mensagem = "schin teste";
 
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-            };
-            
-            channel.QueueDeclarePassive("hello");
+            var body = Encoding.UTF8.GetBytes(mensagem);
 
-            channel.BasicConsume(queue: "hello",
-                                 autoAck: true,
-                                 consumer: consumer);
-
+            channel.BasicPublish(exchange: "", routingKey: "hello", basicProperties: null, body);
         }
 
         private static ConnectionFactory CreateConnectionFactory(IConfiguration configuration)
